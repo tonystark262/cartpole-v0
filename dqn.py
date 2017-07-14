@@ -63,7 +63,7 @@ class dqn(object):
 
     def create_training_network(self):
         self.x = tf.placeholder(tf.float32, [None, self.input_size])
-        self.y = tf.placeholder(tf.float32, [None])
+        self.y = tf.placeholder(tf.float32, [None,1])
         self.a = tf.placeholder(tf.float32, [None, self.output_size])
         self.q_value = self.feed_forward(self.x)
         self.output = tf.reduce_sum(tf.multiply(self.q_value, self.a), reduction_indices=1)
@@ -90,9 +90,9 @@ class dqn(object):
         q_next = self.sess.run(self.q_value, feed_dict={self.x: np.array(next_state)})
         for i in range(len(reward)):
             if sample[i][4]:
-                train_y.append(reward[i])
+                train_y.append([reward[i]])
             else:
-                train_y.append(reward[i] + self.gamma * np.max(q_next[i]))
+                train_y.append([reward[i] + self.gamma * np.max(q_next[i])])
         train_y = np.array(train_y)
         train_x = np.array(train_x)
         action = np.array(action)
