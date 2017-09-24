@@ -152,6 +152,19 @@ def main():
                 av.append(r)
             print("average score is {0}".format(np.average(np.array(av))))
 
+            if np.average(np.array(av))>190:
+                for f in range(100):
+                    p = env.reset()
+                    r = 0
+                    for i in range(200):
+                        env.render()
+                        obj.dropout = 1.0
+                        ac = obj.sess.run(obj.action, feed_dict={obj.x: np.array([p])})[0]
+                        p, rew, done, _ = env.step(ac)
+                        r += rew
+                        if done:
+                            break
+                    av.append(r)
 
 if __name__ == '__main__':
     main()
